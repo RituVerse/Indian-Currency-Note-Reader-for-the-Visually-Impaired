@@ -15,13 +15,14 @@ photo), classifies it with a MobileNetV2 model running fully in the browser
 ### Done
 - Step 0: repo set up, `.gitignore`, README skeleton.
 - Step 1: dataset inspected (see "Dataset report" below).
+- Step 2: `split_dataset.py` – de-duplicates (15 removed) and splits 180 unique
+  images 70/15/15 with seed 42 → train 127 / val 27 / test 26.
 
 ### In progress
-- Step 2: creating the 70/15/15 split script.
+- Step 3: writing `train.py` (MobileNetV2 transfer learning).
 
 ### Remaining
-1. Step 2: split 70/15/15 (seed 42).
-2. Step 3: `train.py` – MobileNetV2 transfer learning + augmentation.
+1. Step 3: `train.py` – MobileNetV2 transfer learning + augmentation.
 3. Step 4: evaluate on test set, confusion matrix image.
 4. Step 5: export to TensorFlow.js into `/model`.
 5. Step 6: `index.html`, `style.css`, `script.js` (webcam, upload, speech).
@@ -48,6 +49,7 @@ See "Reproduce" section below (filled in as steps complete).
 |------|---------|
 | `README.md` | this file |
 | `.gitignore` | keeps dataset / large files out of git |
+| `split_dataset.py` | pools Train+Test, removes duplicates, writes `dataset_split/{train,val,test}/<class>` |
 
 ---
 
