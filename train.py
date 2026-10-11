@@ -116,7 +116,7 @@ callbacks = [
 
 # ------------------------------------------------------- phase 1: head ------
 print("\n=== Phase 1: training classifier head ===")
-hist1 = model.fit(train_ds, validation_data=val_ds, epochs=EPOCHS_HEAD, callbacks=callbacks)
+hist1 = model.fit(train_ds, validation_data=val_ds, epochs=EPOCHS_HEAD, callbacks=callbacks, verbose=2)
 
 # ------------------------------------------------- phase 2: fine-tuning -----
 print("\n=== Phase 2: fine-tuning top layers of MobileNetV2 ===")
@@ -128,7 +128,7 @@ model.compile(
     loss="sparse_categorical_crossentropy",
     metrics=["accuracy"],
 )
-hist2 = model.fit(train_ds, validation_data=val_ds, epochs=EPOCHS_FINE, callbacks=callbacks)
+hist2 = model.fit(train_ds, validation_data=val_ds, epochs=EPOCHS_FINE, callbacks=callbacks, verbose=2)
 
 # ------------------------------------------------- training curves plot -----
 acc = hist1.history["accuracy"] + hist2.history["accuracy"]

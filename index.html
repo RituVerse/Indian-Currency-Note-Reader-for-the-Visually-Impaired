@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Currency Note Reader</title>
+  <meta name="description" content="Point your camera at an Indian banknote and hear its value spoken aloud.">
+  <link rel="stylesheet" href="style.css">
+  <!-- TensorFlow.js runs the trained model directly in the browser. No server needed. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Indian Currency Note Reader</h1>
+    <p class="tagline">Show a note to the camera. The app says its value aloud.</p>
+  </header>
+
+  <main>
+    <!-- Status line is an ARIA live region so screen readers announce changes -->
+    <p id="status" class="status" role="status" aria-live="polite">Loading model&hellip;</p>
+
+    <!-- Big result panel: what note was detected, and how sure the model is -->
+    <section class="result" aria-label="Prediction result">
+      <p id="prediction" class="prediction" aria-live="assertive">&mdash;</p>
+      <p id="confidence" class="confidence">Confidence: &mdash;</p>
+      <div class="bar" aria-hidden="true"><div id="bar-fill" class="bar-fill"></div></div>
+    </section>
+
+    <!-- Camera preview / uploaded image preview -->
+    <section class="viewer" aria-label="Camera preview">
+      <video id="video" autoplay playsinline muted></video>
+      <img id="preview" alt="Uploaded note" hidden>
+      <canvas id="canvas" hidden></canvas>
+    </section>
+
+    <!-- Controls: big buttons, large touch targets -->
+    <section class="controls" aria-label="Controls">
+      <button id="btn-camera" class="btn primary" type="button">Start camera</button>
+      <button id="btn-capture" class="btn" type="button" disabled>Read note now</button>
+      <label class="btn" for="file-input">Upload photo</label>
+      <input id="file-input" type="file" accept="image/*" hidden>
+      <button id="btn-speak" class="btn" type="button">Repeat</button>
+      <label class="toggle">
+        <input id="auto-toggle" type="checkbox" checked>
+        Auto-read every 2 seconds
+      </label>
+    </section>
+
+    <section class="help">
+      <h2>How to use</h2>
+      <ol>
+        <li>Press <strong>Start camera</strong> and allow camera access.</li>
+        <li>Hold the note flat, fill most of the frame, in good light.</li>
+        <li>The value is spoken when the model is at least 85&nbsp;% sure. Otherwise it asks you to show the note again.</li>
+        <li>No camera? Use <strong>Upload photo</strong>.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <p>Classes: &#8377;10, &#8377;20, &#8377;50, &#8377;100, &#8377;200, &#8377;500, &#8377;2000 &middot; MobileNetV2 + TensorFlow.js &middot; runs fully offline in your browser.</p>
+    <p>BUILD WITH ML &middot; Coding Connoisseurs, FoET, University of Lucknow</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
