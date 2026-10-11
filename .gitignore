@@ -1,0 +1,26 @@
+# Raw dataset (download from Kaggle link in README instead)
+dataset_raw/
+dataset_split/
+*.zip
+
+# Training artefacts that are too large / regenerable
+saved_model/
+*.keras
+*.h5
+checkpoints/
+logs/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
