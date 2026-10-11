@@ -11,7 +11,7 @@ Pipeline
      portraits, a mirrored note is not a realistic input.)
   3. MobileNetV2 (ImageNet weights, frozen) + GlobalAveragePooling + Dropout +
      Dense softmax head.   Phase 1: train the head only.
-  4. Phase 2 (fine-tuning): unfreeze the top ~30 layers of MobileNetV2 and
+  4. Phase 2 (fine-tuning): unfreeze the top ~20 layers of MobileNetV2 and
      train with a very small learning rate.
   5. Evaluate on the TEST set (never used before this point), print accuracy
      and classification report, save confusion_matrix.png.
@@ -34,10 +34,10 @@ from sklearn.metrics import confusion_matrix, classification_report
 # ----------------------------------------------------------------- settings --
 DATA_DIR = "dataset_split"
 IMG_SIZE = (224, 224)                     # MobileNetV2 native input
-BATCH = 16
+BATCH = 8                                  # small batch: sandbox has only 1 GB RAM
 SEED = 42
-EPOCHS_HEAD = 15                           # phase 1
-EPOCHS_FINE = 15                           # phase 2
+EPOCHS_HEAD = 25                           # phase 1
+EPOCHS_FINE = 12                           # phase 2
 OUT_MODEL = "saved_model/currency_model.keras"
 
 random.seed(SEED)
@@ -65,9 +65,10 @@ class_names = train_ds.class_names          # e.g. ['10','100','20','200',...]
 print("Classes:", class_names)
 
 AUTOTUNE = tf.data.AUTOTUNE
-train_ds = train_ds.prefetch(AUTOTUNE)
-val_ds = val_ds.prefetch(AUTOTUNE)
-test_ds = test_ds.prefetch(AUTOTUNE)
+# Dataset is tiny (180 images) so cache decoded images in RAM to avoid re-reading JPEGs.
+train_ds = train_ds.cache().prefetch(AUTOTUNE)
+val_ds = val_ds.cache().prefetch(AUTOTUNE)
+test_ds = test_ds.cache().prefetch(AUTOTUNE)
 
 # --------------------------------------------------------- augmentation -----
 # Applied inside the model, so it is only active during training (model.fit).
@@ -121,7 +122,7 @@ hist1 = model.fit(train_ds, validation_data=val_ds, epochs=EPOCHS_HEAD, callback
 # ------------------------------------------------- phase 2: fine-tuning -----
 print("\n=== Phase 2: fine-tuning top layers of MobileNetV2 ===")
 base.trainable = True
-for layer in base.layers[:-30]:           # keep all but the last 30 layers frozen
+for layer in base.layers[:-20]:           # keep all but the last 20 layers frozen
     layer.trainable = False
 model.compile(
     optimizer=keras.optimizers.Adam(1e-5),   # tiny LR so we don't wreck weights

@@ -37,6 +37,9 @@ photo), classifies it with a MobileNetV2 model running fully in the browser
 - Split: 70 / 15 / 15, random seed 42. Test set never used for training/tuning.
 
 ### Known issues / errors
+- Sandbox has only ~1 GB RAM and 2 CPUs. First training run (batch 16,
+  30 fine-tune layers) swapped and hung in fine-tuning. Fixed by batch 8,
+  `.cache()` on datasets, 20 fine-tune layers. Training takes ~5 min on CPU.
 - Dataset is small (195 images total) and contains 15 exact duplicate images,
   some shared between the original Train and Test folders. Duplicates are
   removed before splitting so the test set stays honest.
@@ -49,6 +52,8 @@ See "Reproduce" section below (filled in as steps complete).
 |------|---------|
 | `README.md` | this file |
 | `.gitignore` | keeps dataset / large files out of git |
+| `train.py` | trains MobileNetV2, evaluates on test, saves model + plots |
+| `index.html` / `style.css` / `script.js` | the web app (static, no server needed) |
 | `split_dataset.py` | pools Train+Test, removes duplicates, writes `dataset_split/{train,val,test}/<class>` |
 
 ---
